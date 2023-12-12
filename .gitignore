@@ -1,4 +1,2 @@
-/venv
-.venv
-/__pycache__
-__pycache__/main.cpython-312.pyc
+.venv/
+__pycache__/
