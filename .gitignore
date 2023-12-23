@@ -1,4 +1,15 @@
-/venv
+/.venv
 .venv
+.venv/
 /__pycache__
-__pycache__/main.cpython-312.pyc
+__pycache__
+__pycache__/
+/data
+data
+data/
+/.env
+.env
+.env/
+*.gz
+*.json
+*.csv
