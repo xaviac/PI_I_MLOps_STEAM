@@ -13,3 +13,7 @@ data/
 *.gz
 *.json
 *.csv
+*.parquet.gz
+*.parquet
+*.pickle
+*.pkl
