@@ -10,7 +10,7 @@ app = FastAPI()
 
 
 @app.get("/PlayTimeGenre/{genero}")
-async def PlayTimeGenre(genero:str):
+async def PlayTimeGenre(genero: str):
     """Función que devuelve el tiempo total de juego para un género dado."""
      # Filtramos el dataframe para el generes
     df_genres = group_by_year_genres[group_by_year_genres['genres'].str.contains(genero, case=False, na=False)]
@@ -24,7 +24,7 @@ async def PlayTimeGenre(genero:str):
 
 
 @app.get("/UserForGenre/{genero}")
-async def UserForGenre(genero):
+async def UserForGenre(genero: str):
     """Función que devuelve el usuario con más horas jugadas para un género dado."""
 
     # Filtrar el DataFrame por el género dado
