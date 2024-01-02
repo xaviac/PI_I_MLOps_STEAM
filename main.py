@@ -1,13 +1,19 @@
 import pandas as pd
+import joblib
 from fastapi import FastAPI
 
 group_by_year_genres = pd.read_parquet('https://github.com/xaviac/storage__PI_MLOp/raw/main/data/functions/group_by_year_genres.parquet.gz')
 group_by_user_genres_year = pd.read_parquet('https://github.com/xaviac/storage__PI_MLOp/raw/main/data/functions/group_by_user_genres_year.parquet.gz')
 union_ur_sg = pd.read_parquet('https://github.com/xaviac/storage__PI_MLOp/raw/main/data/functions/union_ur_sg.parquet.gz')
+df_model_fit = pd.read_parquet('https://github.com/xaviac/storage__PI_MLOp/raw/main/data/model/df_model_fit.parquet.gz') 
 
 
 app = FastAPI()
 
+
+@app.get("/")
+async def root():
+    return {"Visit this url": "https://mlops-steam-api.onrender.com/docs"}
 
 @app.get("/PlayTimeGenre/{genero}")
 async def PlayTimeGenre(genero: str):
@@ -87,3 +93,27 @@ async def sentiment_analysis(year: int):
     result = {'Negative': int(negatives), 'Positive': int(positives), 'Neutral': int(neutrals)}
 
     return result
+
+
+@app.get("/recomendacion_juego/{item_id}")
+async def recomendacion_juego(item_id: int):
+    """Función que devuelve los 5 juegos más similares a un juego dado."""
+
+    with open('../data/model/cosine_similarity.pkl', 'rb') as file:
+        modelo = joblib.load(file)
+
+    if item_id not in df_model_fit['id'].tolist():
+       return {'Respuesta': '''No se encontraron resultados para el item_id: {} enviado'''.format(item_id)}
+
+    def get_recommendations(idx, cosine_sim=modelo):
+       idx = df_model_fit[df_model_fit['id'] == item_id].index[0]
+       sim_scores = list(enumerate(cosine_sim[idx]))
+       sim_scores = sorted(sim_scores, key=lambda x: x[1], reverse=True)
+       sim_scores = sim_scores[:5]
+       game_indices = [i[0] for i in sim_scores]
+       return df_model_fit['title'].iloc[game_indices].tolist()
+
+    #Obtener el índice del item_id
+
+    recommendations = get_recommendations(item_id)
+    return {"Recomendaciones": recommendations}
