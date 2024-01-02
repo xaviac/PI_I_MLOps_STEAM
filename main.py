@@ -55,7 +55,7 @@ async def UsersRecommend(year: int):
     # Filtramos el DataFrame donde la columna 'release_year' es igual a year, la columna 'recommend' es True y la columna 'sentiment_analysis' tiene valores 1 o 2. 
     filter = union_ur_sg['title'][(union_ur_sg['release_year'] == year) & (union_ur_sg['recommend'] == True) & (union_ur_sg['sentiment_analysis'].isin([1, 2]))].value_counts().reset_index().head(3)
 
-    result = [{f'Puesto {i+1}: {row['title']}'} for i, row in filter.iterrows()]
+    result = [{'Puesto {}: {}'.format(i + 1, row['title'])} for i, row in filter.iterrows()]
     
     return result
 
@@ -66,7 +66,7 @@ async def UsersNotRecommend(year: int):
     # Se filtra las filas del DataFrame donde la columna 'release_year' es igual a year, la columna 'recommend' es False y la columna 'sentiment_analysis' con valor 0
     filter = union_ur_sg['title'][(union_ur_sg['release_year'] == year) & (union_ur_sg['recommend'] == False) & (union_ur_sg['sentiment_analysis']==0)].value_counts().reset_index().head(3)
 
-    result = [{f'Puesto {i+1}: {row['title']}'} for i, row in filter.iterrows()]
+    result = [{'Puesto {}: {}'.format(i + 1, row['title'])} for i, row in filter.iterrows()]
     
     return result
 
