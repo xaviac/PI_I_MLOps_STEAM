@@ -5,7 +5,7 @@ from fastapi import FastAPI
 group_by_year_genres = pd.read_parquet('https://github.com/xaviac/storage__PI_MLOp/raw/main/data/functions/group_by_year_genres.parquet.gz')
 group_by_user_genres_year = pd.read_parquet('https://github.com/xaviac/storage__PI_MLOp/raw/main/data/functions/group_by_user_genres_year.parquet.gz')
 union_ur_sg = pd.read_parquet('https://github.com/xaviac/storage__PI_MLOp/raw/main/data/functions/union_ur_sg.parquet.gz')
-df_model_fit = pd.read_parquet('./data/model/df_model_fit.parquet.gz')
+df_model_fit = pd.read_parquet('https://github.com/xaviac/storage__PI_MLOp/raw/main/data/model/df_model_fit.parquet.gz')
 
 with open('./data/model/cosine_similarity.pkl', 'rb') as file:
     modelo = joblib.load(file)
@@ -103,7 +103,7 @@ async def recomendacion_juego(item_id: int):
     
 
     if item_id not in df_model_fit['id'].tolist():
-       return {'Respuesta': '''No se encontraron resultados para el item_id: {}.'''.format(item_id)}
+       return {'Respuesta':'No se encontraron resultados para el item_id: {}'.format(item_id)}
 
     def get_recommendations(idx, cosine_sim=modelo):
        idx = df_model_fit[df_model_fit['id'] == item_id].index[0]
