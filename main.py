@@ -97,9 +97,9 @@ async def sentiment_analysis(year: int):
 @app.get("/recomendacion_juego/{item_id}")
 async def recomendacion_juego(item_id: int):
     """Función que devuelve los 5 juegos más similares a un juego dado."""
-    df_model_fit = pd.read_parquet('https://github.com/xaviac/storage__PI_MLOp/raw/main/data/model/df_model_fit.parquet.gz')
+    df_model_fit = pd.read_csv('../model/df_model_fit.csv.gz', compression='gzip', encoding='utf-8')
 
-    with open('../data/model/cosine_similarity.pkl', 'rb') as file:
+    with open('../model/cosine_similarity.pkl', 'rb') as file:
         modelo = joblib.load(file)
 
     if item_id not in df_model_fit['id'].tolist():
@@ -109,7 +109,7 @@ async def recomendacion_juego(item_id: int):
        idx = df_model_fit[df_model_fit['id'] == item_id].index[0]
        sim_scores = list(enumerate(cosine_sim[idx]))
        sim_scores = sorted(sim_scores, key=lambda x: x[1], reverse=True)
-       sim_scores = sim_scores[1:6]
+       sim_scores = sim_scores[:5]
        game_indices = [i[0] for i in sim_scores]
        return df_model_fit['title'].iloc[game_indices].tolist()
 
