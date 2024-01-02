@@ -20,7 +20,9 @@ async def PlayTimeGenre(genero: str):
     # Se encuentra el año con más horas jugadas
     top_year = total_by_year.idxmax()
 
-    return {f'Año de lanzamiento con más horas jugadas para {genero}: {top_year}'}
+    result = {f'Año de lanzamiento con más horas jugadas para {genero}: {top_year}'}
+
+    return result
 
 
 @app.get("/UserForGenre/{genero}")
@@ -41,8 +43,10 @@ async def UserForGenre(genero: str):
     total_hours_year = top_user.groupby('release_year')['playtime_forever_hours'].sum().reset_index()
 
     user_hours_years = [{'Año': int(row['release_year']), 'Horas': int(row['playtime_forever_hours'])} for _, row in total_hours_year.iterrows()]
+
+    result = {f'Usuario con más horas jugadas para {genero}': playtime_by_user, 'Horas jugadas': user_hours_years}
     
-    return {f'Usuario con más horas jugadas para {genero}': playtime_by_user, 'Horas jugadas': user_hours_years}
+    return result
 
 
 @app.get("/UsersRecommend/{year}")
@@ -50,8 +54,10 @@ async def UsersRecommend(year: int):
     """Función que devuelve los 3 juegos más recomendados para un año dado."""
     # Filtramos el DataFrame donde la columna 'release_year' es igual a year, la columna 'recommend' es True y la columna 'sentiment_analysis' tiene valores 1 o 2. 
     filter = union_ur_sg['title'][(union_ur_sg['release_year'] == year) & (union_ur_sg['recommend'] == True) & (union_ur_sg['sentiment_analysis'].isin([1, 2]))].value_counts().reset_index().head(3)
+
+    result = [{f'Puesto {i+1}: {row['title']}'} for i, row in filter.iterrows()]
     
-    return [{'Puesto {}: {}'.format(i+1,row['title'])} for i, row in filter.iterrows()]
+    return result
 
 
 @app.get("/UsersNotRecommend/{year}")
@@ -59,8 +65,10 @@ async def UsersNotRecommend(year: int):
     """Función que devuelve los 3 juegos menos recomendados para un año dado."""
     # Se filtra las filas del DataFrame donde la columna 'release_year' es igual a year, la columna 'recommend' es False y la columna 'sentiment_analysis' con valor 0
     filter = union_ur_sg['title'][(union_ur_sg['release_year'] == year) & (union_ur_sg['recommend'] == False) & (union_ur_sg['sentiment_analysis']==0)].value_counts().reset_index().head(3)
+
+    result = [{f'Puesto {i+1}: {row['title']}'} for i, row in filter.iterrows()]
     
-    return [{'Puesto {}: {}'.format(i+1,row['title'])} for i, row in filter.iterrows()]
+    return result
 
 
 @app.get("/sentiment_analysis/{year}")
@@ -76,4 +84,6 @@ async def sentiment_analysis(year: int):
     neutrals = filter[filter['sentiment_analysis']==1]['sentiment_analysis'].count()
     # Devolver conteos en un diccionario
 
-    return {'Negative': int(negatives), 'Positive': int(positives), 'Neutral': int(neutrals)}
+    result = {'Negative': int(negatives), 'Positive': int(positives), 'Neutral': int(neutrals)}
+
+    return result
