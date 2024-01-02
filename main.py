@@ -1,5 +1,5 @@
-import pickle
 import pandas as pd
+import joblib
 from fastapi import FastAPI
 
 group_by_year_genres = pd.read_parquet('https://github.com/xaviac/storage__PI_MLOp/raw/main/data/functions/group_by_year_genres.parquet.gz')
@@ -7,8 +7,8 @@ group_by_user_genres_year = pd.read_parquet('https://github.com/xaviac/storage__
 union_ur_sg = pd.read_parquet('https://github.com/xaviac/storage__PI_MLOp/raw/main/data/functions/union_ur_sg.parquet.gz')
 df_model_fit = pd.read_parquet('https://github.com/xaviac/storage__PI_MLOp/raw/main/data/model/df_model_fit.parquet.gz')
 
-with open('../data/model/cosine_similarity.pkl', 'rb') as file:
-    modelo = pickle.load(file)
+with open('./model/cosine_similarity.pkl', 'rb') as file:
+    modelo = joblib.load(file)
 
 app = FastAPI()
 
