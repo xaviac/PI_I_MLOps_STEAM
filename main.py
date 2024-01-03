@@ -99,21 +99,21 @@ async def sentiment_analysis(year: int):
 
 @app.get("/recomendacion_juego/{item_id}")
 async def recomendacion_juego(item_id: int):
-    """Función que devuelve los 5 juegos más similares a un juego dado."""
     
-
     if item_id not in df_model_fit['id'].tolist():
        return {'Respuesta':'No se encontraron resultados para el item_id: {}'.format(item_id)}
-
+    
     def get_recommendations(idx, cosine_sim=modelo):
-       idx = df_model_fit[df_model_fit['id'] == item_id].index[0]
-       sim_scores = list(enumerate(cosine_sim[idx]))
-       sim_scores = sorted(sim_scores, key=lambda x: x[1], reverse=True)
-       sim_scores = sim_scores[:5]
-       game_indices = [i[0] for i in sim_scores]
-       return df_model_fit['title'].iloc[game_indices].tolist()
+     if idx >= len(cosine_sim):
+          return []
 
+     sim_scores = list(enumerate(cosine_sim[idx]))
+     sim_scores = sorted(sim_scores, key=lambda x: x[1], reverse=True)
+     sim_scores = sim_scores[1:6]
+     game_indices = [i[0] for i in sim_scores]
+     return df_model_fit['title'].iloc[game_indices].tolist()
+    
     #Obtener el índice del item_id
-
     recommendations = get_recommendations(item_id)
+    
     return {"Recomendaciones": recommendations}
