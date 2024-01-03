@@ -105,7 +105,7 @@ async def recomendacion_juego(item_id: int):
     
     def get_recommendations(idx, cosine_sim=modelo):
      if idx >= len(cosine_sim):
-          return []
+          return 'No se encontraron resultados para el item_id: {}'.format(item_id)
 
      sim_scores = list(enumerate(cosine_sim[idx]))
      sim_scores = sorted(sim_scores, key=lambda x: x[1], reverse=True)
