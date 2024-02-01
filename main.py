@@ -72,9 +72,9 @@ async def userdata(User_id:str):
     return {
         'Usuario': str(user['user_id'].iloc[0]),
         'Dinero gastado': f'{str(user["price"].iloc[0])} USD',
-        'Porcentaje de recomendación': f'{str(user['percent_recommend'].iloc[0])}%',
+        '% de recomendación': f'{str(user["percent_recommend"].iloc[0])}%',
         'Cantidad de items': str(int(user['total_items'].iloc[0]))
-        }
+    }
 
 
 @app.get("/UserForGenre/{genero}")
