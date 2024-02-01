@@ -104,49 +104,47 @@ async def UserForGenre(genero: str):
     return result
 
 
-@app.get("/UsersRecommend/{year}")
-async def UsersRecommend(year: int):
-    """Función que devuelve los 3 juegos más recomendados para un año dado."""
-    # Filtramos el DataFrame donde la columna 'release_year' es igual a year, la columna 'recommend' es True y la columna 'sentiment_analysis' tiene valores 1 o 2. 
-    filter = union_ur_sg['title'][(union_ur_sg['release_year'] == year) & (union_ur_sg['recommend'] is True) & (union_ur_sg['sentiment_analysis'].isin([1, 2]))].value_counts().reset_index().head(3)
-
-    result = [{'Puesto {}: {}'.format(i + 1, row['title'])} for i, row in filter.iterrows()]
+@app.get("/best_developer_year/{year}")
+async def best_developer_year(year: int):
+    """
+    Función que devuelve el top 3 de desarrolladores con juegos MÁS recomendados por usuarios para el año dado.
+    params:
+    year: int
+    """
+    # Filtramos el DataFrame donde la columna 'release_year' es igual a year, la columna 'recommend' es True y la columna 'sentiment_analysis' tiene valores 2 positivos. 
+    filter = union_ur_sg['developer'][(union_ur_sg['release_year'] == year) & (union_ur_sg['recommend'] == True) & (union_ur_sg['sentiment_analysis'].isin([2]))].value_counts().reset_index().head(3)
     
-    return result
+    return [{f'Puesto {i + 1}: {row['developer']}'} for i, row in filter.iterrows()]
 
 
-@app.get("/UsersNotRecommend/{year}")
-async def UsersNotRecommend(year: int):
-    """Función que devuelve los 3 juegos menos recomendados para un año dado."""
-    # Se filtra las filas del DataFrame donde la columna 'release_year' es igual a year, la columna 'recommend' es False y la columna 'sentiment_analysis' con valor 0
-    filter = union_ur_sg['title'][(union_ur_sg['release_year'] == year) & (union_ur_sg['recommend'] is False) & (union_ur_sg['sentiment_analysis']==0)].value_counts().reset_index().head(3)
-
-    result = [{'Puesto {}: {}'.format(i + 1, row['title'])} for i, row in filter.iterrows()]
-    
-    return result
-
-
-@app.get("/sentiment_analysis/{year}")
-async def sentiment_analysis(year: int):
-    """Función que devuelve la cantidad de comentarios positivos, negativos y neutrales para un año dado."""
+@app.get("/developer_reviews_analysis/{developer}")
+async def developer_reviews_analysis(developer: str):
+    """
+    Función que devuelve la cantidad de comentarios positivos y negativos para un desarrollador dado.
+    params:
+    developer: str
+    """
     # Filtrar el DataFrame para el año
-    filter = union_ur_sg[union_ur_sg['release_year'] == year]
+    filter = union_ur_sg[union_ur_sg['developer'] == developer]
     #Cuenta los comentarios positivos
     positives = filter[filter['sentiment_analysis']==2]['sentiment_analysis'].count()
     # Cuenta los comentarios negativos
     negatives = filter[filter['sentiment_analysis']==0]['sentiment_analysis'].count()
     # Cuenta los comentarios neutrales
     neutrals = filter[filter['sentiment_analysis']==1]['sentiment_analysis'].count()
-    # Devolver conteos en un diccionario
 
-    result = {'Negative': int(negatives), 'Positive': int(positives), 'Neutral': int(neutrals)}
-
-    return result
+    # Devolver conteos en un diccionario con el nombre del desarrollador como clave
+    # y una lista de los conteos como valor negativos y positivos
+    return {f'{developer}':[f'Negative = {negatives}', f'Positive = {positives}']}
 
 
 @app.get("/recomendacion_juego/{item_id}")
 async def recomendacion_juego(item_id: int):
-    
+    """
+    Función que devuelve las 5 recomendaciones de juegos similares al item_id dado.
+    params:
+    item_id: int
+    """    
     if item_id not in df_model_fit['id'].tolist():
        return {'Respuesta':'No se encontraron resultados para el item_id: {}'.format(item_id)}
     
