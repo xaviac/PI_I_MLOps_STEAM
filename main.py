@@ -2,7 +2,9 @@ import pandas as pd
 import joblib
 from fastapi import FastAPI
 
+df_sg = pd.read_parquet('https://github.com/xaviac/storage__PI_MLOp/raw/main/data/clean/steam_games.parquet.gz')
 group_by_year_genres = pd.read_parquet('https://github.com/xaviac/storage__PI_MLOp/raw/main/data/functions/group_by_year_genres.parquet.gz')
+items_reviews_users = pd.read_parquet('https://github.com/xaviac/storage__PI_MLOp/raw/main/data/functions/items_reviews_users.parquet.gz')
 group_by_user_genres_year = pd.read_parquet('https://github.com/xaviac/storage__PI_MLOp/raw/main/data/functions/group_by_user_genres_year.parquet.gz')
 union_ur_sg = pd.read_parquet('https://github.com/xaviac/storage__PI_MLOp/raw/main/data/functions/union_ur_sg.parquet.gz')
 df_model_fit = pd.read_parquet('https://github.com/xaviac/storage__PI_MLOp/raw/main/data/model/df_model_fit.parquet.gz')
@@ -17,25 +19,70 @@ app = FastAPI()
 async def root():
     return {"Visit this url": "https://mlops-steam-api.onrender.com/docs"}
 
-@app.get("/PlayTimeGenre/{genero}")
-async def PlayTimeGenre(genero: str):
-    """Función que devuelve el tiempo total de juego para un género dado."""
-     # Filtramos el dataframe para el generes
-    df_genres = group_by_year_genres[group_by_year_genres['genres'].str.contains(genero, case=False, na=False)]
+@app.get("/developer/{desarrollador}")
+async def developer(desarrollador: str):
+    """
+    Cantidad de items y porcentaje de contenido Free por año según empresa desarrolladora
+    params:
+    desarrollador: str
+    """
+    # Verifiquemos que se ha introducido un desarrollador que existe en el dataset
+    if desarrollador.title() not in list(df_sg['developer'].str.title()):
+        return "Desarrollador no encontrado, por favor, inténtelo de nuevo." 
+    
+    group_by_year = df_sg[df_sg['developer'].str.title() == desarrollador.title()].groupby('release_year')['id'].count().reset_index()
 
-    # Agrupamos release_year y sumamos playtime_forever_hours
-    total_by_year = df_genres.groupby('release_year')['playtime_forever_hours'].sum()
-    # Se encuentra el año con más horas jugadas
-    top_year = total_by_year.idxmax()
 
-    result = {f'Año de lanzamiento con más horas jugadas para {genero}: {top_year}'}
+    # Conteo de 'Free to Play' por año
+    free_content = df_sg[(df_sg['developer'] == desarrollador) & (df_sg['price'] == 0)].groupby('release_year')['id'].count().reset_index()
+    free_content.rename(columns={'id': 'Free to Play'}, inplace=True)
+    
+    # Unión de group_by_year y free_content
+    merged_data = pd.merge(group_by_year, free_content, on='release_year', how='left')
+    
+    # Porcentaje del contenido gratis por año
+    percent_free = round(merged_data['Free to Play'] / merged_data['id'] * 100, 0)
 
-    return result
+    list_percent_free = percent_free.fillna(0).tolist()
 
+    # Convertir a cadena y formatear la presentación
+    formatted_list = [f'{int(num)}%' for num in list_percent_free]
+    
+    # Creo el DataFrame final
+    resultado = {
+        'Año': merged_data['release_year'].tolist(),
+        'Cantidad de Items': merged_data['id'].tolist(),
+        'Contenido Free': formatted_list
+    }
+    
+    return resultado
+
+@app.get("/userdata/{User_id}")
+async def userdata(User_id:str):
+    """
+    Retorna el dinero gastado, el porcentaje de recomendación y la cantidad de items comprados por el usuario
+    params:
+    User_id: str
+    """
+    # Se genera un dataframe para el User_id ingresado de donde se leerán los datos.
+    user = items_reviews_users[items_reviews_users['user_id'] == User_id]
+    if user.empty:
+        return "Usuario no encontrado"
+    
+    return {
+        'Usuario': str(user['user_id'].iloc[0]),
+        'Dinero gastado': f'{str(user["price"].iloc[0])} USD',
+        '% de recomendación': f'{str(user['percent_recommend'].iloc[0])}%',
+        'Cantidad de items': str(int(user['total_items'].iloc[0]))
+        }
 
 @app.get("/UserForGenre/{genero}")
 async def UserForGenre(genero: str):
-    """Función que devuelve el usuario con más horas jugadas para un género dado."""
+    """
+    Función que devuelve el usuario con más horas jugadas para un género dado.
+    params:
+    genero: str
+    """
 
     # Filtrar el DataFrame por el género dado
     generes = group_by_user_genres_year[group_by_user_genres_year['genres'].str.contains(genero)] 
