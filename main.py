@@ -114,7 +114,7 @@ async def best_developer_year(year: int):
     # Filtramos el DataFrame donde la columna 'release_year' es igual a year, la columna 'recommend' es True y la columna 'sentiment_analysis' tiene valores 2 positivos. 
     filter = union_ur_sg['developer'][(union_ur_sg['release_year'] == year) & (union_ur_sg['recommend'] == True) & (union_ur_sg['sentiment_analysis'].isin([2]))].value_counts().reset_index().head(3)
     
-    return [{f'Puesto {i + 1}: {row['developer']}'} for i, row in filter.iterrows()]
+    return [{f'Puesto {i + 1}: {row["developer"]}'} for i, row in filter.iterrows()]
 
 
 @app.get("/developer_reviews_analysis/{developer}")
