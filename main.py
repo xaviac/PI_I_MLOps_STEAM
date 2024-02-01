@@ -72,9 +72,10 @@ async def userdata(User_id:str):
     return {
         'Usuario': str(user['user_id'].iloc[0]),
         'Dinero gastado': f'{str(user["price"].iloc[0])} USD',
-        '% de recomendación': f'{str(user['percent_recommend'].iloc[0])}%',
+        'Porcentaje de recomendación': f'{str(user['percent_recommend'].iloc[0])}%',
         'Cantidad de items': str(int(user['total_items'].iloc[0]))
         }
+
 
 @app.get("/UserForGenre/{genero}")
 async def UserForGenre(genero: str):
@@ -83,7 +84,6 @@ async def UserForGenre(genero: str):
     params:
     genero: str
     """
-
     # Filtrar el DataFrame por el género dado
     generes = group_by_user_genres_year[group_by_user_genres_year['genres'].str.contains(genero)] 
     #Agrupo por usuario y sumo cantidad de horas jugadas
