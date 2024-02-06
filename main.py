@@ -12,7 +12,9 @@ df_model_fit = pd.read_parquet('https://github.com/xaviac/storage__PI_MLOp/raw/m
 with open('./model/cosine_similarity.pkl', 'rb') as file:
     modelo = joblib.load(file)
 
-app = FastAPI()
+app = FastAPI(title="Steam API",
+              description="API del Sistema de recomendación de la plataforma Steam",
+              version="0.1")
 
 
 @app.get("/")
@@ -57,15 +59,15 @@ async def developer(desarrollador: str):
     
     return resultado
 
-@app.get("/userdata/{User_id}")
-async def userdata(User_id:str):
+@app.get("/userdata/{user_id}")
+async def userdata(user_id:str):
     """
     Retorna el dinero gastado, el porcentaje de recomendación y la cantidad de items comprados por el usuario
     params:
-    User_id: str
+    user_id: str
     """
-    # Se genera un dataframe para el User_id ingresado de donde se leerán los datos.
-    user = items_reviews_users[items_reviews_users['user_id'] == User_id]
+    # Se genera un dataframe para el user_id ingresado de donde se leerán los datos.
+    user = items_reviews_users[items_reviews_users['user_id'] == user_id]
     if user.empty:
         return "Usuario no encontrado"
     
