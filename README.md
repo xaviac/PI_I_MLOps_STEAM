@@ -2,9 +2,14 @@
     <img src="./images/store_home.jpg" alt="Imagen en cabecera" width="100%">
 </p>
 
-# <center>Sistema de Recomendación STEAM (MVP)</center>
-#### <center>[Bootcamp de Ciencia de Datos - SoyHenry](https://www.soyhenry.com/carrera-data-science)</center>
-### <center>Francisco Javier Acevedo Rodríguez</center>
+<div align="center">
+
+# Sistema de Recomendación STEAM (MVP)
+### [Bootcamp de Ciencia de Datos - SoyHenry](https://www.soyhenry.com/carrera-data-science)
+### Francisco Javier Acevedo Rodríguez
+
+</div>
+
 
 <br>
 
@@ -42,7 +47,6 @@ El desarrollo del sistema de recomendación se llevará a cabo siguiendo las mej
 - [Análisis Exploratorio de Datos (EDA)](./EDA/)
 - [Desarrollo de Funciones implementadas en la API](./functions/)
 - [Modelo de Machine Learning](./model/)
-< align="justify">
 
 ## Implementación
 
