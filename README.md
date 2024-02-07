@@ -47,6 +47,7 @@ El desarrollo del sistema de recomendación se llevará a cabo siguiendo las mej
 - [Análisis Exploratorio de Datos (EDA)](./EDA/)
 - [Desarrollo de Funciones implementadas en la API](./functions/)
 - [Modelo de Machine Learning](./model/)
+- [Video de Presentación](https://player.vimeo.com/video/910629275)
 
 ## Implementación
 
@@ -55,17 +56,6 @@ Se logró desplegar el modelo de recomendación en un entorno de producción, pr
 </p>
 
 El cual puede ser consultado en el siguiente enlace [STEAM - API](https://mlops-steam-api.onrender.com/docs)
-
-## Video de Presentación
-
-<p align="center">
-    <a href="./video/Presentación_PI_I.mp4">
-        <video controls width="70%">
-            <source src="./video/Presentación_PI_I.mp4" type="video/mp4">
-            Your browser does not support the video tag.
-        </video>
-    </a>
-</p>
 
 ## Conclusiones
 
