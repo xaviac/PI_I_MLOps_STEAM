@@ -56,6 +56,16 @@ Se logró desplegar el modelo de recomendación en un entorno de producción, pr
 
 El cual puede ser consultado en el siguiente enlace [STEAM - API](https://mlops-steam-api.onrender.com/docs)
 
+## Video de Presentación
+
+<p align="center">
+    <a href="./video/Presentación_PI_I.mp4">
+        <video controls width="70%">
+            <source src="./video/Presentación_PI_I.mp4" type="video/mp4">
+            Your browser does not support the video tag.
+        </video>
+    </a>
+</p>
 
 ## Conclusiones
 
@@ -104,4 +114,7 @@ Si deseas conocer más sobre mi trabajo, puedes visitar mi portafolio en línea:
 </p>
 
 - [Portafolio](https://xaviac.github.io/)
+
+
+
 
