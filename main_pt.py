@@ -10,7 +10,9 @@ df_model_fit = pd.read_parquet('https://github.com/xaviac/storage__PI_MLOp/raw/m
 with open('./model/cosine_similarity.pkl', 'rb') as file:
     modelo = joblib.load(file)
 
-app = FastAPI()
+app = FastAPI(title="Steam API",
+              description="API del Sistema de recomendación de la plataforma Steam",
+              version="0.1")
 
 
 @app.get("/")
