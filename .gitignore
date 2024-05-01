@@ -13,6 +13,4 @@ data/
 *.gz
 *.json
 *.csv
-functions_pt.ipynb
-main_pt.py
 video/
