@@ -30,7 +30,7 @@ async def PlayTimeGenre(genero: str):
     # Se encuentra el año con más horas jugadas
     top_year = total_by_year.idxmax()
 
-    result = {f'Año de lanzamiento con más horas jugadas para {genero}': f'{top_year}'}
+    result = {f'Año de lanzamiento con más horas jugadas para {genero}': f'{int(top_year)}'}
 
     return result
 
