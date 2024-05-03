@@ -21,7 +21,7 @@ async def root():
 
 @app.get("/PlayTimeGenre/{genero}")
 async def PlayTimeGenre(genero: str):
-    """Función que devuelve el tiempo total de juego para un género dado."""
+    """Función que devuelve el año y el tiempo total de juego para un género dado."""
      # Filtramos el dataframe para el generes
     df_genres = group_by_year_genres[group_by_year_genres['genres'].str.contains(genero, case=False, na=False)]
 
