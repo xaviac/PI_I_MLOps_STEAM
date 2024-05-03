@@ -30,7 +30,7 @@ async def PlayTimeGenre(genero: str):
     # Se encuentra el año con más horas jugadas
     top_year = total_by_year.idxmax()
 
-    result = {f'Año de lanzamiento con más horas jugadas para {genero}: {top_year}'}
+    result = {f'Año de lanzamiento con más horas jugadas para {genero}': f'{top_year}'}
 
     return result
 
@@ -65,7 +65,7 @@ async def UsersRecommend(year: int):
     # Filtramos el DataFrame donde la columna 'release_year' es igual a year, la columna 'recommend' es True y la columna 'sentiment_analysis' tiene valores 1 o 2. 
     filter = union_ur_sg['title'][(union_ur_sg['release_year'] == year) & (union_ur_sg['recommend'] == True) & (union_ur_sg['sentiment_analysis'].isin([1, 2]))].value_counts().reset_index().head(3)
     
-    return [{f"Puesto {i + 1}: {row['title']}"} for i, row in filter.iterrows()]
+    return [{f"Puesto {i + 1}": f"{row['title']}"} for i, row in filter.iterrows()]
 
 
 @app.get("/UsersNotRecommend/{year}")
@@ -74,12 +74,12 @@ async def UsersNotRecommend(year: int):
     # Se filtra las filas del DataFrame donde la columna 'release_year' es igual a year, la columna 'recommend' es False y la columna 'sentiment_analysis' con valor 0
     filter = union_ur_sg['title'][(union_ur_sg['release_year'] == year) & (union_ur_sg['recommend'] == False) & (union_ur_sg['sentiment_analysis']==0)].value_counts().reset_index().head(3)
 
-    return [{f"Puesto {i + 1}: {row['title']}"} for i, row in filter.iterrows()]
+    return [{f"Puesto {i + 1}": f"{row['title']}"} for i, row in filter.iterrows()]
 
 
 @app.get("/sentiment_analysis/{year}")
 async def sentiment_analysis(year: int):
-    """Función que devuelve la cantidad de comentarios positivos, negativos y neutrales para un año dado."""
+    """Función que devuelve la cantidad de comentarios negativos, neutrales y positivos para un año dado."""
     # Filtrar el DataFrame para el año
     filter = union_ur_sg[union_ur_sg['release_year'] == year]
     #Cuenta los comentarios positivos
@@ -90,7 +90,7 @@ async def sentiment_analysis(year: int):
     neutrals = filter[filter['sentiment_analysis']==1]['sentiment_analysis'].count()
     # Devolver conteos en un diccionario
 
-    result = {'Negative': int(negatives), 'Positive': int(positives), 'Neutral': int(neutrals)}
+    result = {'Negative': int(negatives), 'Neutral': int(neutrals), 'Positive': int(positives)}
 
     return result
 
