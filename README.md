@@ -47,7 +47,7 @@ El desarrollo del sistema de recomendación se llevará a cabo siguiendo las mej
 - [Análisis Exploratorio de Datos (EDA)](./EDA/)
 - [Desarrollo de Funciones implementadas en la API](./functions/)
 - [Modelo de Machine Learning](./model/)
-- [Video de Presentación](https://player.vimeo.com/video/910629275)
+- [Video de Presentación](https://player.vimeo.com/video/943452372)
 
 ## Implementación
 
